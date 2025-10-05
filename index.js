@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 
 import authRoutes from "./src/routes/auth.js";
 import productRoutes from "./src/routes/products.js";
+import orderRoutes from "./src/routes/orders.js";
 
 dotenv.config();
 
@@ -20,7 +21,10 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/orders", orderRoutes);
 
-app.listen(port, () => {
-  console.log(`🚀 Server berjalan di http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`🚀 Server berjalan di http://localhost:${port}`);
+// });
+
+export default app;

@@ -38,7 +38,7 @@ export const getProductById = async (req, res) => {
 };
 
 export const createProduct = async (req, res) => {
-  const { name, price, old_price, description, details, images } =
+  const { name, price, old_price, description, detail, images } =
     req.body;
 
   if (!name || !price) {
@@ -55,7 +55,7 @@ export const createProduct = async (req, res) => {
         price,
         old_price,
         description,
-        details,
+        detail,
         images,
       })
       .select()
