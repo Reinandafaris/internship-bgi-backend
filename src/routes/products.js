@@ -5,9 +5,13 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  uploadProductImage,
 } from "../controllers/productController.js";
+import upload from "../middleware/upload.js";
 
 const router = express.Router();
+
+router.post("/upload", upload.single("image"), uploadProductImage);
 
 router.get("/", getAllProducts);
 router.get("/:id", getProductById);

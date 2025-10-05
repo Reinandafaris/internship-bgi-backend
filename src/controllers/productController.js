@@ -8,12 +8,10 @@ export const getAllProducts = async (req, res) => {
     if (error) throw error;
     res.status(200).json(data);
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        error: "Gagal mengambil data produk.",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Gagal mengambil data produk.",
+      details: error.message,
+    });
   }
 };
 
@@ -32,12 +30,10 @@ export const getProductById = async (req, res) => {
         .json({ error: "Produk tidak ditemukan." });
     res.status(200).json(data);
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        error: "Gagal mengambil detail produk.",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Gagal mengambil detail produk.",
+      details: error.message,
+    });
   }
 };
 
@@ -70,12 +66,10 @@ export const createProduct = async (req, res) => {
       .status(201)
       .json({ message: "Produk berhasil dibuat!", product: data });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        error: "Gagal membuat produk.",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Gagal membuat produk.",
+      details: error.message,
+    });
   }
 };
 
@@ -104,19 +98,15 @@ export const updateProduct = async (req, res) => {
       return res
         .status(404)
         .json({ error: "Produk tidak ditemukan untuk diperbarui." });
-    res
-      .status(200)
-      .json({
-        message: "Produk berhasil diperbarui!",
-        product: data,
-      });
+    res.status(200).json({
+      message: "Produk berhasil diperbarui!",
+      product: data,
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        error: "Gagal memperbarui produk.",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Gagal memperbarui produk.",
+      details: error.message,
+    });
   }
 };
 
@@ -130,11 +120,41 @@ export const deleteProduct = async (req, res) => {
     if (error) throw error;
     res.status(204).send();
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        error: "Gagal menghapus produk.",
-        details: error.message,
+    res.status(500).json({
+      error: "Gagal menghapus produk.",
+      details: error.message,
+    });
+  }
+};
+
+export const uploadProductImage = async (req, res) => {
+  if (!req.file) {
+    return res
+      .status(400)
+      .json({ error: "Tidak ada file gambar yang diunggah." });
+  }
+
+  try {
+    const file = req.file;
+    const fileName = `${Date.now()}-${file.originalname}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("product-images") // Nama bucket di Supabase
+      .upload(fileName, file.buffer, {
+        contentType: file.mimetype,
       });
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage
+      .from("product-images")
+      .getPublicUrl(fileName);
+
+    res.status(200).json({ imageUrl: data.publicUrl });
+  } catch (error) {
+    res.status(500).json({
+      error: "Gagal mengunggah gambar.",
+      details: error.message,
+    });
   }
 };
